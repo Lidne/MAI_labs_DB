@@ -92,6 +92,4 @@ create table stock (
     primary key (product_id, warehouse_id)
 );
 
-create index idx_stock_product_id on stock (product_id);
-
 create index idx_stock_warehouse_id on stock (warehouse_id);
