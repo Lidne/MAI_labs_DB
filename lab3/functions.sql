@@ -8,7 +8,6 @@ create or replace function fn_stock_qty(p_product_id uuid, p_warehouse_id uuid) 
   );
 $$;
 
-
 create or replace function fn_warehouse_used_volume_m3(p_warehouse_id uuid) returns numeric(18, 4) language sql stable as $$
   select coalesce(
     sum(s.quantity * coalesce(p.volume_m3, 0)),

@@ -13,7 +13,6 @@ begin
   values (v_wh, current_date)
   returning id into v_out;
 
-  -- Должно упасть с ошибкой от триггера проверки остатков
   insert into outgoing_items(outgoing_id, product_id, quantity)
   values (v_out, v_prod, 999999);
 

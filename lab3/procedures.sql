@@ -25,7 +25,6 @@ begin
 end;
 $$;
 
-
 create or replace procedure sp_post_outgoing_simple(p_warehouse_id uuid, p_date date, p_items jsonb, inout p_outgoing_id uuid default null) language plpgsql as $$
 declare
   r record;

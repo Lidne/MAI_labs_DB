@@ -39,9 +39,7 @@ begin
 end;
 $$;
 
-
 drop trigger if exists trg_outgoing_items_check_stock on outgoing_items;
-
 
 create trigger trg_outgoing_items_check_stock
 before
@@ -51,15 +49,18 @@ update on outgoing_items
 for each row execute function trg_outgoing_items_check_stock();
 
 -- ---------------------------------------------
- -- Сюда пишем все изменения в остатках
+-- Сюда пишем все изменения в остатках
 
-create table if not exists stock_audit (id bigserial primary key,
-                                                     changed_at timestamptz not null default now(),
-                                                                                             op text not null,
-                                                                                                     product_id uuid,
-                                                                                                                warehouse_id uuid,
-                                                                                                                             old_quantity int, new_quantity int, delta int);
-
+create table if not exists stock_audit (
+    id bigserial primary key,
+    changed_at timestamptz not null default now(),
+    op text not null,
+    product_id uuid,
+    warehouse_id uuid,
+    old_quantity int,
+    new_quantity int,
+    delta int
+);
 
 create or replace function trg_stock_audit() returns trigger language plpgsql as $$
 begin
@@ -81,9 +82,7 @@ begin
 end;
 $$;
 
-
 drop trigger if exists trg_stock_audit on stock;
-
 
 create trigger trg_stock_audit after
 insert
