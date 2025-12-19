@@ -27,13 +27,12 @@ fake = Faker("ru_RU")
 
 
 def get_conn():
-    conn = psycopg2.connect(**DB_CONFIG)
+    conn = psycopg2.connect(**DB_CONFIG)  # pyright: ignore[reportCallIssue, reportArgumentType]
     conn.autocommit = False
     return conn
 
 
 def populate_categories(cur):
-    print("Генерация категорий...")
     categories = []
 
     names = [
@@ -58,7 +57,6 @@ def populate_categories(cur):
 
 
 def populate_warehouses(cur):
-    print("Генерация складов...")
     ids = []
     sql = """
         INSERT INTO warehouses (name, address, capacity_m3) 
@@ -74,7 +72,6 @@ def populate_warehouses(cur):
 
 
 def populate_suppliers(cur):
-    print("Генерация поставщиков...")
     ids = []
     sql = "INSERT INTO suppliers (name, contact) VALUES (%s, %s) RETURNING id;"
     for _ in range(COUNTS["suppliers"]):
@@ -86,7 +83,6 @@ def populate_suppliers(cur):
 
 
 def populate_products(cur, category_ids):
-    print("Генерация товаров...")
     ids = []
     sql = """
         INSERT INTO products (name, article, description, weight_kg, volume_m3, price, category_id) 
@@ -108,8 +104,6 @@ def populate_products(cur, category_ids):
 
 
 def populate_stock(cur, product_ids, warehouse_ids):
-    print("Генерация остатков...")
-
     pairs = set()
     while len(pairs) < COUNTS["stock_entries"]:
         pairs.add((random.choice(product_ids), random.choice(warehouse_ids)))
@@ -130,8 +124,6 @@ def populate_stock(cur, product_ids, warehouse_ids):
 
 
 def populate_movements(cur, supplier_ids, warehouse_ids, product_ids):
-    print("Генерация поступлений и отгрузок...")
-
     for _ in range(COUNTS["incoming"]):
         sql_head = "INSERT INTO incoming (supplier_id, warehouse_id, date) VALUES (%s, %s, %s) RETURNING id;"
         cur.execute(
@@ -177,10 +169,9 @@ def main():
         populate_movements(cur, supp_ids, wh_ids, prod_ids)
 
         conn.commit()
-        print("Успешно заполнено!")
 
     except (Exception, psycopg2.DatabaseError) as error:
-        print(f"Ошибка: {error}")
+        print(f"Error: {error}")
         if conn:
             conn.rollback()
     finally:
